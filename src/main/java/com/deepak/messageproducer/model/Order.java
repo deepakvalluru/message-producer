@@ -2,34 +2,38 @@ package com.deepak.messageproducer.model;
 
 import java.io.Serializable;
 
-public class Order implements Serializable {
-   
+public class Order implements Serializable
+{
+
    private static final long serialVersionUID = 1L;
-   
-   private String orderNumber;
-   private String productId;
-   private double amount;
-   
+
+   private String            orderNumber;
+   private String            productId;
+   private double            amount;
+   private String            priority;
+
    /**
     * 
     */
    public Order()
    {
-      
+
    }
-   
+
    /**
     * @param orderNumber
     * @param productId
     * @param amount
     */
-   public Order( String orderNumber, String productId, double amount )
+   public Order( String orderNumber, String productId, double amount, String priority )
    {
       super();
       this.orderNumber = orderNumber;
       this.productId = productId;
       this.amount = amount;
+      this.priority = priority;
    }
+
    /**
     * @return the orderNumber
     */
@@ -37,6 +41,7 @@ public class Order implements Serializable {
    {
       return orderNumber;
    }
+
    /**
     * @param orderNumber the orderNumber to set
     */
@@ -44,6 +49,7 @@ public class Order implements Serializable {
    {
       this.orderNumber = orderNumber;
    }
+
    /**
     * @return the productId
     */
@@ -51,6 +57,7 @@ public class Order implements Serializable {
    {
       return productId;
    }
+
    /**
     * @param productId the productId to set
     */
@@ -58,6 +65,7 @@ public class Order implements Serializable {
    {
       this.productId = productId;
    }
+
    /**
     * @return the amount
     */
@@ -65,6 +73,7 @@ public class Order implements Serializable {
    {
       return amount;
    }
+
    /**
     * @param amount the amount to set
     */
@@ -72,12 +81,34 @@ public class Order implements Serializable {
    {
       this.amount = amount;
    }
-   
+
+   /**
+    * @return the priority
+    */
+   public String getPriority()
+   {
+      return priority;
+   }
+
+   /**
+    * @param priority the priority to set
+    */
+   public void setPriority( String priority )
+   {
+      this.priority = priority;
+   }
+
    @Override
    public String toString()
    {
-      return "Order [orderNumber=" + orderNumber + ", productId=" + productId + ", amount=" + amount + "]";
+      return "Order [orderNumber=" + orderNumber
+             + ", productId="
+             + productId
+             + ", amount="
+             + amount
+             + ", priority="
+             + priority
+             + "]";
    }
 
-   
-}    
+}

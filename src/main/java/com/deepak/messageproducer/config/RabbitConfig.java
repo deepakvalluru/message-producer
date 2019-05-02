@@ -1,9 +1,13 @@
 package com.deepak.messageproducer.config;
 
+import java.util.List;
+
+import org.assertj.core.util.Arrays;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.ExchangeBuilder;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.core.TopicExchange;
@@ -16,16 +20,24 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig
 {
-   public static final String QUEUE_ORDERS                    = "orders-queue";
+   public static final String QUEUE_ORDERS_PRIORITY           = "orders-queue-priority";
+   public static final String QUEUE_ORDERS_NONPRIORITY        = "orders-queue-nonpriority";
    public static final String EXCHANGE_ORDERS                 = "orders-exchange";
+   public static final String EXCHANGE_FAN_OUT_ORDERS         = "orders-fan-out-exchange";
    public static final String PRIORITY_ORDERS_BINDING_KEY     = "orders.priority";
    public static final String NOT_PRIORITY_ORDERS_BINDING_KEY = "orders.nonpriority";
-   public static final String ALL_ORDERS_BINDING_KEY          = "orders.all";
+   public static final String ALL_ORDERS_BINDING_KEY          = "orders.*";
 
    @Bean
-   Queue ordersQueue()
+   Queue ordersPriorityQueue()
    {
-      return QueueBuilder.durable( QUEUE_ORDERS ).build();
+      return QueueBuilder.durable( QUEUE_ORDERS_PRIORITY ).build();
+   }
+
+   @Bean
+   Queue ordersNonPriorityQueue()
+   {
+      return QueueBuilder.durable( QUEUE_ORDERS_NONPRIORITY ).build();
    }
 
    @Bean
@@ -35,9 +47,33 @@ public class RabbitConfig
    }
 
    @Bean
-   Binding binding( Queue ordersQueue, TopicExchange ordersExchange )
+   Exchange ordersAllExchange()
    {
-      return BindingBuilder.bind( ordersQueue ).to( ordersExchange ).with( PRIORITY_ORDERS_BINDING_KEY );
+      return ExchangeBuilder.fanoutExchange( EXCHANGE_FAN_OUT_ORDERS ).build();
+   }
+
+   @Bean
+   Binding bindingPriorityOrders( Queue ordersPriorityQueue, TopicExchange ordersExchange )
+   {
+      return BindingBuilder.bind( ordersPriorityQueue ).to( ordersExchange ).with( PRIORITY_ORDERS_BINDING_KEY );
+   }
+
+   @Bean
+   Binding bindingNonPriorityOrders( Queue ordersNonPriorityQueue, TopicExchange ordersExchange )
+   {
+      return BindingBuilder.bind( ordersNonPriorityQueue ).to( ordersExchange ).with( NOT_PRIORITY_ORDERS_BINDING_KEY );
+   }
+   
+   @Bean
+   Binding bindingAllOrdersToPriorityQueue( Queue ordersPriorityQueue, FanoutExchange ordersAllExchange )
+   {
+      return BindingBuilder.bind( ordersPriorityQueue ).to( ordersAllExchange );
+   }
+   
+   @Bean
+   Binding bindingAllOrdersToNonPriorityQueue( Queue ordersNonPriorityQueue, FanoutExchange ordersAllExchange )
+   {
+      return BindingBuilder.bind( ordersNonPriorityQueue ).to( ordersAllExchange );
    }
 
    @Bean

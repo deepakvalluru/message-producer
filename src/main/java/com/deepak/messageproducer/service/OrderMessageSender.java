@@ -13,22 +13,39 @@ import com.deepak.messageproducer.model.Order;
 @Service
 public class OrderMessageSender
 {
-   static final Logger logger = LoggerFactory.getLogger( OrderMessageSender.class );
-   
+   static final Logger          logger = LoggerFactory.getLogger( OrderMessageSender.class );
+
    private final RabbitTemplate rabbitTemplate;
-   
-   private final Exchange exchange;
+   private final Exchange       ordersExchange;
+   private final Exchange       ordersAllExchange;
 
    @Autowired
-   public OrderMessageSender( RabbitTemplate rabbitTemplate, Exchange exchange )
+   public OrderMessageSender( RabbitTemplate rabbitTemplate, Exchange ordersExchange, Exchange ordersAllExchange )
    {
       this.rabbitTemplate = rabbitTemplate;
-      this.exchange = exchange;
+      this.ordersExchange = ordersExchange;
+      this.ordersAllExchange = ordersAllExchange;
    }
 
    public void sendOrder( Order order )
    {
-      logger.debug( "Order sent : " + order );
-      this.rabbitTemplate.convertAndSend( exchange.getName(), RabbitConfig.PRIORITY_ORDERS_BINDING_KEY , order );
+      logger.debug( "Order sent : {}", order );
+      if( order.getPriority().equalsIgnoreCase( "High" ) )
+      {
+         this.rabbitTemplate.convertAndSend( ordersExchange.getName(),
+                                             RabbitConfig.PRIORITY_ORDERS_BINDING_KEY,
+                                             order );
+      }
+      else if( order.getPriority().equalsIgnoreCase( "Low" ) )
+      {
+         this.rabbitTemplate.convertAndSend( ordersExchange.getName(),
+                                             RabbitConfig.NOT_PRIORITY_ORDERS_BINDING_KEY,
+                                             order );
+      }
+      else
+      {
+         this.rabbitTemplate.convertAndSend( ordersAllExchange.getName(), RabbitConfig.ALL_ORDERS_BINDING_KEY, order );
+      }
+
    }
 }
