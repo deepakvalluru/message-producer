@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<properties>
+		<property name="log-path" value="${bundle:application:logging.file.path}"/>
+		<property name="app-name" value="${bundle:application:spring.application.name}"/>
+	</properties>
+	<Appenders>
+		<Console name="Console-Appender" target="SYSTEM_OUT">
+			<PatternLayout>
+				<pattern>
+					[%d{MM:dd HH:mm:ss.SSS}] [${app-name}] [%X{X-B3-TraceId}] [%X{X-B3-SpanId}] [%level] [%logger{36}] - %msg%n
+				</pattern>
+			</PatternLayout>
+		</Console>
+		<File name="App-File-Appender" fileName="${log-path}/${app-name}.log">
+			<PatternLayout>
+				<pattern>
+					[%d{MM:dd HH:mm:ss.SSS}] [${app-name}] [%X{X-B3-TraceId}] [%X{X-B3-SpanId}] [%level] [%logger{36}] - %msg%n
+				</pattern>
+			</PatternLayout>
+		</File>
+	</Appenders>
+	<Loggers>
+		<Logger name="com.deepak" level="debug" additivity="false">
+			<AppenderRef ref="App-File-Appender" />
+			<AppenderRef ref="Console-Appender" />
+		</Logger>
+		<Root level="info">
+			<AppenderRef ref="Console-Appender" />
+			<AppenderRef ref="App-File-Appender" />
+		</Root>
+	</Loggers>
+</Configuration>

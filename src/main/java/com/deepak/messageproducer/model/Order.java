@@ -11,6 +11,14 @@ public class Order implements Serializable {
    private double amount;
    
    /**
+    * 
+    */
+   public Order()
+   {
+      
+   }
+   
+   /**
     * @param orderNumber
     * @param productId
     * @param amount
