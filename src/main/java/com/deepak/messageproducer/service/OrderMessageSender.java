@@ -44,7 +44,8 @@ public class OrderMessageSender
       }
       else
       {
-         this.rabbitTemplate.convertAndSend( ordersAllExchange.getName(), RabbitConfig.ALL_ORDERS_BINDING_KEY, order );
+         // this.rabbitTemplate.convertAndSend( ordersAllExchange.getName(), RabbitConfig.ALL_ORDERS_BINDING_KEY, order );
+         this.rabbitTemplate.convertAndSend( ordersAllExchange.getName(), "", order );
       }
 
    }

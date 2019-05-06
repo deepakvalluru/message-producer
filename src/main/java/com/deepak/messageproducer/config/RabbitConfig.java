@@ -1,8 +1,5 @@
 package com.deepak.messageproducer.config;
 
-import java.util.List;
-
-import org.assertj.core.util.Arrays;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Exchange;
