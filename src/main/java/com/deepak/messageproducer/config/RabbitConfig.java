@@ -34,6 +34,7 @@ public class RabbitConfig
    {
       return QueueBuilder.durable( QUEUE_ORDERS_PRIORITY )
                          .withArgument( "x-dead-letter-exchange", ordersDLE().getName() )
+                         .withArgument( "x-dead-letter-routing-key", PRIORITY_ORDERS_BINDING_KEY )
                          .build();
    }
 
@@ -53,8 +54,8 @@ public class RabbitConfig
    Queue ordersDLQ()
    {
       return QueueBuilder.durable( QUEUE_ORDERS_DLQ )
-                         .withArgument( "x-message-ttl", 20000 )
-                         .withArgument( "x-dead-letter-exchange", ordersExchange().getName() )
+//                         .withArgument( "x-message-ttl", 20000 )
+//                         .withArgument( "x-dead-letter-exchange", ordersExchange().getName() )
                          .build();
    }
 
